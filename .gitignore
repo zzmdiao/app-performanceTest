@@ -1,0 +1,41 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+###Mac os generated files
+.DS_Store
+.DS_Store?
+
+###Maven
+target/
+allure-results/
+leeCode/
+result/*.txt
+result/*.hprof
+finalResult/
+images/
+screenImage/
+selenium_Grid/
+

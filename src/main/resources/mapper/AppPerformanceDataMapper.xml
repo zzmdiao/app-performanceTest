@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iqianjin.appperformance.getData.dao.AppPerformanceDataMapper">
+    <sql id="Base_Column_list">
+        id, type, value, client_version, create_time
+    </sql>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO performance_info(type, value, platName, phoneModels, client_version, create_time ) VALUES (#{type},#{value},#{platName},#{phoneModels},#{client_version},#{create_time})
+    </insert>
+</mapper>

@@ -1,0 +1,42 @@
+appium:
+  app: ""
+  url: http://127.0.0.1:4723/wd/hub
+  wait: 3
+  platName: android #换手机修改此值
+  androidCapabilities:
+    platformName: android
+    platformVersion: 7.1.1
+    deviceName: test
+    appPackage: com.iqianjin.client
+    appActivity: asurface.activity.StartActivity
+    unicodeKeyboard: true
+    resetKeyboard: true
+    newCommandTimeout: 300
+    automationName: UiAutomator2
+    autoGrantPermission: true
+    printPageSourceOnFindFailure: true
+    noReset: true
+    unlockType: password
+    unlockKey: 111111
+  iosCapabilities:
+    platformName: ios
+    platformVersion: 10.3.2
+    deviceName: iphone6p
+    bundleId: com.iqianjin.iqianjinplus
+    udid: 9a98c5f70037dbaaff8fa23839f83d3f3aae158f
+    automationName: XCUITest
+    printPageSourceOnFindFailure: true
+    noReset: true
+    startIWDP: true
+    wdaStartupRetries: 4
+    wdaStartupRetryInterval: 8000
+    newCommandTimeout: 300
+    #iosInstallPause: 5000
+    #showXcodeLog: true
+    #showIOSLog: true
+    # ios  Original error: Error: connect ECONNREFUSED 127.0.0.1:27753  https://github.com/appium/appium/issues/12094
+
+
+
+
+

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iqianjin.appperformance.db.mapper.DeviceMapper">
+  <resultMap id="BaseResultMap" type="com.iqianjin.appperformance.db.model.Device">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="system_version" jdbcType="VARCHAR" property="systemVersion" />
+    <result column="cpu_info" jdbcType="VARCHAR" property="cpuInfo" />
+    <result column="mem_size" jdbcType="VARCHAR" property="memSize" />
+    <result column="screen_width" jdbcType="INTEGER" property="screenWidth" />
+    <result column="screen_height" jdbcType="INTEGER" property="screenHeight" />
+    <result column="platform" jdbcType="INTEGER" property="platform" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="last_online_time" jdbcType="TIMESTAMP" property="lastOnlineTime" />
+    <result column="last_offline_time" jdbcType="TIMESTAMP" property="lastOfflineTime" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, system_version, cpu_info, mem_size, screen_width, screen_height, platform,
+    status, last_online_time, last_offline_time, username, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from device
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from device
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.iqianjin.appperformance.db.model.Device">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into device (name, system_version, cpu_info,
+      mem_size, screen_width, screen_height,
+      platform, status, last_online_time,
+      last_offline_time, username, create_time
+      )
+    values (#{name,jdbcType=VARCHAR}, #{systemVersion,jdbcType=VARCHAR}, #{cpuInfo,jdbcType=VARCHAR},
+      #{memSize,jdbcType=VARCHAR}, #{screenWidth,jdbcType=INTEGER}, #{screenHeight,jdbcType=INTEGER},
+      #{platform,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{lastOnlineTime,jdbcType=TIMESTAMP},
+      #{lastOfflineTime,jdbcType=TIMESTAMP}, #{username,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iqianjin.appperformance.db.model.Device">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="systemVersion != null">
+        system_version,
+      </if>
+      <if test="cpuInfo != null">
+        cpu_info,
+      </if>
+      <if test="memSize != null">
+        mem_size,
+      </if>
+      <if test="screenWidth != null">
+        screen_width,
+      </if>
+      <if test="screenHeight != null">
+        screen_height,
+      </if>
+      <if test="platform != null">
+        platform,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="lastOnlineTime != null">
+        last_online_time,
+      </if>
+      <if test="lastOfflineTime != null">
+        last_offline_time,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="systemVersion != null">
+        #{systemVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuInfo != null">
+        #{cpuInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="memSize != null">
+        #{memSize,jdbcType=VARCHAR},
+      </if>
+      <if test="screenWidth != null">
+        #{screenWidth,jdbcType=INTEGER},
+      </if>
+      <if test="screenHeight != null">
+        #{screenHeight,jdbcType=INTEGER},
+      </if>
+      <if test="platform != null">
+        #{platform,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="lastOnlineTime != null">
+        #{lastOnlineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOfflineTime != null">
+        #{lastOfflineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iqianjin.appperformance.db.model.Device">
+    update device
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="systemVersion != null">
+        system_version = #{systemVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuInfo != null">
+        cpu_info = #{cpuInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="memSize != null">
+        mem_size = #{memSize,jdbcType=VARCHAR},
+      </if>
+      <if test="screenWidth != null">
+        screen_width = #{screenWidth,jdbcType=INTEGER},
+      </if>
+      <if test="screenHeight != null">
+        screen_height = #{screenHeight,jdbcType=INTEGER},
+      </if>
+      <if test="platform != null">
+        platform = #{platform,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="lastOnlineTime != null">
+        last_online_time = #{lastOnlineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOfflineTime != null">
+        last_offline_time = #{lastOfflineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iqianjin.appperformance.db.model.Device">
+    update device
+    set name = #{name,jdbcType=VARCHAR},
+      system_version = #{systemVersion,jdbcType=VARCHAR},
+      cpu_info = #{cpuInfo,jdbcType=VARCHAR},
+      mem_size = #{memSize,jdbcType=VARCHAR},
+      screen_width = #{screenWidth,jdbcType=INTEGER},
+      screen_height = #{screenHeight,jdbcType=INTEGER},
+      platform = #{platform,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      last_online_time = #{lastOnlineTime,jdbcType=TIMESTAMP},
+      last_offline_time = #{lastOfflineTime,jdbcType=TIMESTAMP},
+      username = #{username,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

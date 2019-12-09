@@ -1,5 +1,6 @@
 package com.iqianjin.appperformance.manager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.iqianjin.appperformance.App;
 import com.iqianjin.appperformance.common.constant.PackageTypeEnum;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -55,6 +57,8 @@ public class UploadManager {
 
     @Autowired
     private BaseAction baseAction;
+    @Resource
+    private AlertManager alertManager;
 
     private static final String UPLOAD_URL = "http://10.10.201.39:9002/newTestStage/testReport/uploadMore";
     private static UploadManager uploadManager;
@@ -99,14 +103,17 @@ public class UploadManager {
 
     //statements上传的每个文件对应的场景,0-购买爱盈宝，1-购买月进宝，2-切换tab，3-浏览资金流水，4-浏览我的资产、优惠券、加息券，5-浏览出借记录
     public void uploadFile(String[] statements, String startTime) {
-        if (baseAction.getPlatform().get() == MobileDevice.ANDROID) {
+        //baseAction.getPlatform().get()
+        if ( 1 == MobileDevice.ANDROID) {
             try {
+                log.info("开始上次android文件到测试平台:{}", Arrays.toString(statements));
                 postForString(UploadManager.getInstance().getResultFiles(MobileDevice.ANDROID), statements, startTime, MobileDevice.ANDROID);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             try {
+                log.info("开始上次IOS文件到测试平台:{}", Arrays.toString(statements));
                 postForString(UploadManager.getInstance().getResultFiles(MobileDevice.IOS), statements, startTime, MobileDevice.IOS);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -114,7 +121,7 @@ public class UploadManager {
         }
     }
 
-    public String postForString(MultipartFile[] files, String[] statements, String startTime, Integer type) throws IOException {
+    public void postForString(MultipartFile[] files, String[] statements, String startTime, Integer type) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(UPLOAD_URL);
 
@@ -131,17 +138,20 @@ public class UploadManager {
             builder.addTextBody("statements", statement);
         }
 
-        builder.addTextBody("platForm", String.valueOf(baseAction.getPlatform().get()));
+
         if (type == MobileDevice.ANDROID) {
+            builder.addTextBody("platForm", String.valueOf(MobileDevice.ANDROID));
             builder.addTextBody("version", AndroidUtil.getAppVersion());
         } else {
+            builder.addTextBody("platForm", String.valueOf(MobileDevice.IOS));
             builder.addTextBody("version", IosUtil.getAppVersion());
         }
 
         builder.addTextBody("uploadUser", "robot");
-        builder.addTextBody("packageType", String.valueOf(PackageTypeEnum.TEST_PACKAGE));
+        builder.addTextBody("packageType", PackageTypeEnum.TEST_PACKAGE.getType());
         builder.addTextBody("startTime", startTime);
-        builder.addTextBody("remark", "app性能测试");
+        builder.addTextBody("remark", "app-performance");
+
         httpPost.setEntity(builder.build());
         CloseableHttpResponse response;
         String sResponse = null;
@@ -149,10 +159,19 @@ public class UploadManager {
             response = httpClient.execute(httpPost);
             HttpEntity responseEntity = response.getEntity();
             sResponse = EntityUtils.toString(responseEntity, "UTF-8");
-            log.info("上传测试平台文件返回url:{},sResponse:{}", UPLOAD_URL, sResponse);
-            return sResponse;
+            log.info("上传文件到测试平台返回url:{},sResponse:{}", UPLOAD_URL, sResponse);
+            JSONObject jsonData = JSONObject.parseObject(sResponse);
+            Integer result = Integer.parseInt(jsonData.get("code").toString());
+            if (result != 1){
+                log.error("上传文件到测试平台发生错误:{}", sResponse);
+                String msg = "性能测试，上传文件到测试平台发生错误";
+                alertManager.alert(msg, sResponse);
+            }
         } catch (Exception e) {
-            throw new ApplicationException("上传测试平台文件异常");
+            log.error("上传文件到测试平台异常:{}", e);
+            String msg = "性能测试，上传文件到测试平台异常";
+            alertManager.alert(msg, e);
+            throw new ApplicationException("上传文件到测试平台异常");
         }
 
     }
@@ -190,17 +209,17 @@ public class UploadManager {
         //将上传完的文件备份到Result目录
         String shpath = System.getProperty("user.dir") + "/Upload/Shell/moveFile.sh";
         String path;
+        String rootPath = System.getProperty("user.dir") + "/Upload/Result";
         if (type == MobileDevice.ANDROID) {
-            path = System.getProperty("user.dir") + uploadAndroidResultPath;
+            path = System.getProperty("user.dir") + File.separator + uploadAndroidResultPath;
         } else {
-            path = System.getProperty("user.dir") + File.separator + iosIfusePath;
+            path = System.getProperty("user.dir") + File.separator + iosIfusePath + uploadIosResultPath;
         }
         try {
             log.info("将上传完的txt文件备份到Reslut目录");
-            TerminalUtils.execute("/bin/sh " + shpath + " " + path);
+            TerminalUtils.execute("/bin/sh " + shpath + " " + path +" " + rootPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }

@@ -11,6 +11,8 @@ import com.iqianjin.appperformance.util.FileMUtils;
 import com.iqianjin.appperformance.util.TerminalUtils;
 import com.iqianjin.lego.contracts.Result;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.Activity;
+import io.appium.java_client.android.AndroidDriver;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class InitManger {
     private String dCustomButton = "doraemon自定义";
     private String dDataCollection = "doraemon数据采集按钮";
     private String dDataClose = "android悬浮窗退出";
+    private String dDataClean = "android悬浮窗文件清理";
 
     //切换环境
     private String xiaolian = "笑脸";
@@ -76,7 +79,10 @@ public class InitManger {
 
             //启动app
             if (MobileDevice.ANDROID == platform) {
-                appiumDriver.launchApp();
+//                appiumDriver.launchApp();
+                Activity act = new Activity("com.iqianjin.client", "com.iqianjin.client.asurface.activity.StartActivity");
+                act.setAppWaitActivity("com.iqianjin.client.asurface.activity.StartActivity");
+                ((AndroidDriver) appiumDriver).startActivity(act);
             }
             changeEnv(env);
             log.info("[自动化测试][{}], 开始录制视频...", deviceId);
@@ -93,11 +99,13 @@ public class InitManger {
             return Result.failure(-2, "初始化出错");
         }
 
-
     }
 
     public void afterAll(String[] statements) {
         try {
+            stopAndroidMonitor();
+            getAndroidImportFile();
+            stopIosMonitor();
             log.info("更新手机状态为：{}", Device.IDLE_STATUS);
             mobileDevice.saveIdelDevice();
             log.info("停止录制视频");
@@ -162,17 +170,23 @@ public class InitManger {
 
     public void startIosMonitor() {
         if (MobileDevice.IOS == platform) {
+            //设置挂载目录
+            log.info("ios ---- 设置挂载目录");
+            IosUtil.setIosIfuse();
             log.info("ios ---- 开启数据采集");
             baseAction.click(dFloatingWindow);
             baseAction.click(dCustomButton);
             if (baseAction.isCanFindElement(dDataCollection, "数据采集已关闭")) {
+                uploadManager.delIosFile();
+                baseAction.click(dDataCollection);
+            }
+            if (baseAction.isCanFindElement(dDataCollection, "数据采集已开启")) {
+                baseAction.click(dDataCollection);
+                uploadManager.delIosFile();
                 baseAction.click(dDataCollection);
             }
             baseAction.click(dFloatingWindow);
-            //设置挂载目录
-            IosUtil.setIosIfuse();
-            //清除旧文件
-            uploadManager.delIosFile();
+
         }
     }
 
@@ -209,6 +223,7 @@ public class InitManger {
                 log.info("开启监控，当前Android监控状态未开启");
                 try {
                     log.info("开启Android监控");
+                    baseAction.click(dDataClean);
                     baseAction.click(dDataClose);
                     TerminalUtils.execute("adb shell am start -n com.iqianjin.client/com.didichuxing.doraemonkit.ui.UniversalActivity -e fragment_CONTENT 18");
                 } catch (IOException e) {
@@ -219,6 +234,9 @@ public class InitManger {
                 try {
                     baseAction.click(dDataClose);
                     TerminalUtils.execute("adb shell am start -n com.iqianjin.client/com.didichuxing.doraemonkit.ui.UniversalActivity -e fragment_CONTENT 18");
+                    TerminalUtils.execute("adb shell am start -n com.iqianjin.client/com.didichuxing.doraemonkit.ui.UniversalActivity -e fragment_CONTENT 19");
+                    baseAction.click(dDataClean);
+                    baseAction.click(dDataClose);
                     TerminalUtils.execute("adb shell am start -n com.iqianjin.client/com.didichuxing.doraemonkit.ui.UniversalActivity -e fragment_CONTENT 18");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -251,8 +269,6 @@ public class InitManger {
                 }
             }
             TerminalUtils.sleep(2);
-            getAndroidImportFile();
-            TerminalUtils.sleep(10);
         }
     }
 

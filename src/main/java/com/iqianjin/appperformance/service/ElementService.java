@@ -27,10 +27,8 @@ public class ElementService {
         log.info("元素列表:{}", elementList);
         if (elementList != null) {
             return Result.ok();
-        } else {
-            return Result.failure(-1, "元素列表为空");
         }
-
+        return Result.failure(-1, "元素列表为空");
     }
 
     public Result update(ElementLocation elementLocation) {
@@ -40,9 +38,8 @@ public class ElementService {
             if (i == 1) {
                 elementManager.buildQuestionCache(false);
                 return Result.ok();
-            } else {
-                return Result.failure(-1, "更新元素失败");
             }
+            return Result.failure(-1, "更新元素失败");
         } catch (Exception e) {
             return Result.systemError("系统异常");
         }
@@ -55,9 +52,9 @@ public class ElementService {
         if (i == 1) {
             elementManager.buildQuestionCache(false);
             return Result.ok();
-        } else {
-            return Result.failure(-1, "删除元素失败");
         }
+        return Result.failure(-1, "删除元素失败");
+
     }
 
 }

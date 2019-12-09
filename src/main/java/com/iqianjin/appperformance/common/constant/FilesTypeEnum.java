@@ -9,7 +9,7 @@ public enum FilesTypeEnum {
     BROW_FUNDFLOW("2", "浏览资金流水"),
     BROW_MY_ASSERTS("3", "浏览我的资产"),
     BROW_LENDRECORD("4", "浏览出借记录"),
-    ALL("0,1,2,3,4", "所有场景"),
+    ALL("1,4,2,3,0", "所有场景"),
     ;
     private String value;
     private String desc;

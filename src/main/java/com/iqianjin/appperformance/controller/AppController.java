@@ -34,8 +34,6 @@ public class AppController {
         try {
             initManger.init(deviceId, env, userName, passWord);
             result = swtichTabService.swtichTab(num);
-            initManger.stopAndroidMonitor();
-            initManger.stopIosMonitor();
         } finally {
             initManger.afterAll(FilesTypeEnum.SWITCH_TAB.getValue());
         }
@@ -49,8 +47,6 @@ public class AppController {
         try {
             initManger.init(deviceId, env, userName, passWord);
             result = browMyAssertsService.browMyAsserts(num);
-            initManger.stopAndroidMonitor();
-            initManger.stopIosMonitor();
         } finally {
             initManger.afterAll( FilesTypeEnum.BROW_MY_ASSERTS.getValue());
         }
@@ -64,8 +60,6 @@ public class AppController {
         try {
             initManger.init(deviceId, env, userName, passWord);
             result = browFundFlowService.browFundFlow(num);
-            initManger.stopAndroidMonitor();
-            initManger.stopIosMonitor();
         } finally {
             initManger.afterAll( FilesTypeEnum.BROW_FUNDFLOW.getValue());
         }
@@ -79,8 +73,6 @@ public class AppController {
         try {
             initManger.init(deviceId, env, userName, passWord);
             result = browLendRecordService.browLendRecord(num);
-            initManger.stopAndroidMonitor();
-            initManger.stopIosMonitor();
         } finally {
             initManger.afterAll(FilesTypeEnum.BROW_LENDRECORD.getValue());
         }
@@ -94,8 +86,6 @@ public class AppController {
         try {
             initManger.init(deviceId, env, userName, passWord);
             result = investProductService.investProduct(num);
-            initManger.stopAndroidMonitor();
-            initManger.stopIosMonitor();
         } finally {
             initManger.afterAll( FilesTypeEnum.INVEST_PRODUCT.getValue());
         }

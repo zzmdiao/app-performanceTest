@@ -32,6 +32,7 @@ public class AlertUtils {
         log.info("企业微信接口返回结果:{}", response);
     }
 
+
     public static void main(String[] args) {
         alertQYWX("android");
     }

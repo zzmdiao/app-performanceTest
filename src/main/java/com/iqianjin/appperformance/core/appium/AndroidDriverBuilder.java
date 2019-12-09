@@ -1,6 +1,5 @@
 package com.iqianjin.appperformance.core.appium;
 
-import com.iqianjin.appperformance.core.AgentStartRunner;
 import com.iqianjin.appperformance.core.MobileDevice;
 import com.iqianjin.appperformance.core.PortProvider;
 import com.iqianjin.appperformance.core.android.AndroidDevice;
@@ -17,8 +16,6 @@ public class AndroidDriverBuilder implements AppiumDriverBuilder {
 
     public static String APP_PACKAGE = "io.appium.android.apis";
     public static String APP_ACTIVITY = "io.appium.android.apis.ApiDemos";
-//    public String APP_PACKAGE = "com.iqianjin.client";
-//    public String APP_ACTIVITY = ".asurface.activity.StartActivity";
 
     @Override
     public AppiumDriver build(MobileDevice mobileDevice, boolean isFirstBuild) {
@@ -37,7 +34,7 @@ public class AndroidDriverBuilder implements AppiumDriverBuilder {
         capabilities.setCapability("chromedriverPort", PortProvider.getChromeDriverAvailablePort());
         capabilities.setCapability("showChromedriverLog", true);
         capabilities.setCapability("extractChromeAndroidPackageFromContextName", true);
-        String chromeDriverFilePath = AgentStartRunner.getChromeDriverFilePath(mobileDevice.getId());
+        String chromeDriverFilePath = AndroidDevice.getChromeDriverFilePath();
         if (!StringUtils.isEmpty(chromeDriverFilePath)) {
             capabilities.setCapability(AndroidMobileCapabilityType.CHROMEDRIVER_EXECUTABLE, chromeDriverFilePath);
         }

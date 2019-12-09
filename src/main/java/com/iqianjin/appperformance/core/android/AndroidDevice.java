@@ -168,4 +168,10 @@ public class AndroidDevice extends MobileDevice {
         }, 0, 1, TimeUnit.SECONDS);
         return service;
     }
+
+    public static String getChromeDriverFilePath() {
+        String chromedriverDir = System.getProperty("user.dir") + "/src/main/resources/chromedrivers";
+        return chromedriverDir;
+
+    }
 }

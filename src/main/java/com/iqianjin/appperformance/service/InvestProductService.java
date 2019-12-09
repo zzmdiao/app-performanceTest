@@ -3,18 +3,19 @@ package com.iqianjin.appperformance.service;
 
 import com.iqianjin.appperformance.core.BaseAction;
 import com.iqianjin.appperformance.core.MobileDevice;
+import com.iqianjin.appperformance.manager.AlertManager;
 import com.iqianjin.appperformance.util.TerminalUtils;
 import com.iqianjin.lego.contracts.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Slf4j
 @Service
 public class InvestProductService {
 
-    @Autowired
-    private BaseAction baseAction;
     private static final String AMOUNT = "1000";
     private String productTab = "产品tab";
     private String threeInvestButton = "三月期立即投资按钮";
@@ -28,6 +29,10 @@ public class InvestProductService {
     private String yjb_product_amount = "月进宝金额输入框";
     private String yjb_product_confirm = "月进宝立即投资按钮";
 
+    @Autowired
+    private BaseAction baseAction;
+    @Resource
+    private AlertManager alertManager;
 
     public Result investProduct(Integer num) {
         try {
@@ -37,10 +42,11 @@ public class InvestProductService {
             buyYJB(num, AMOUNT);
             return Result.ok();
         } catch (Exception e) {
-            log.info("执行购买产品出错：{}", e);
-            return Result.failure(-1, "执行购买产品出错");
+            log.error("执行购买产品出错:{}", e);
+            String msg = "性能测试，执行购买产品出错";
+            alertManager.alert(msg, e);
         }
-
+        return Result.failure(-1, "执行购买产品出错");
     }
 
     public void buyAYB(Integer num, String amount) {

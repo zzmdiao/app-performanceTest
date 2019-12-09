@@ -1,17 +1,17 @@
 package com.iqianjin.appperformance.service;
 
 import com.iqianjin.appperformance.core.BaseAction;
+import com.iqianjin.appperformance.manager.AlertManager;
 import com.iqianjin.lego.contracts.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Service
 @Slf4j
 public class BrowLendRecordService {
-
-    @Autowired
-    private BaseAction baseAction;
 
     private String myTab = "我的tab";
     private String lendRecord = "出借记录";
@@ -24,21 +24,27 @@ public class BrowLendRecordService {
     private String noMore = "没有更多";
     private String yjbRecord = "出借记录-月进宝";
 
+    @Autowired
+    private BaseAction baseAction;
+    @Resource
+    private AlertManager alertManager;
 
     public Result browLendRecord(Integer num) {
         try {
-            log.info("浏览资金流水开始执行，执行次数：{}", num);
+            log.info("浏览出借记录开始执行，执行次数：{}", num);
             isRenewed();
             aybProductRecord(num);
             zcbProductRecord(num);
             yjbProductRecord(num);
             sanbiaoRecord(num);
+            baseAction.goBack();
             return Result.ok();
         } catch (Exception e) {
-            log.error("浏览资金流水执行出错:{}", e);
-            return Result.failure(-1, "浏览资金流水执行出错");
+            log.error("浏览出借记录执行出错:{}", e);
+            String msg = "性能测试，浏览出借记录执行出错";
+            alertManager.alert(msg, e);
         }
-
+        return Result.failure(-1, "浏览资金流水执行出错");
     }
 
 

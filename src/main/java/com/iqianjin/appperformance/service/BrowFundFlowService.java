@@ -2,18 +2,18 @@ package com.iqianjin.appperformance.service;
 
 import com.iqianjin.appperformance.core.BaseAction;
 import com.iqianjin.appperformance.core.MobileDevice;
+import com.iqianjin.appperformance.manager.AlertManager;
 import com.iqianjin.appperformance.util.TerminalUtils;
 import com.iqianjin.lego.contracts.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Service
 @Slf4j
 public class BrowFundFlowService {
-
-    @Autowired
-    private BaseAction baseAction;
 
     private String myTab = "我的tab";
     private String fundFlowTab = "资金流水";
@@ -24,6 +24,11 @@ public class BrowFundFlowService {
     private String asignment = "资金流水-转让债权";
     private String frozen = "资金流水-冻结";
 
+    @Autowired
+    private BaseAction baseAction;
+    @Resource
+    private AlertManager alertManager;
+
     public Result browFundFlow(Integer num) {
 
         try {
@@ -32,8 +37,10 @@ public class BrowFundFlowService {
             return Result.ok();
         } catch (Exception e) {
             log.error("浏览资金流水执行出错:{}", e);
-            return Result.failure(-1, "浏览资金流水执行出错");
+            String msg = "性能测试，浏览资金流水执行出错";
+            alertManager.alert(msg, e);
         }
+        return Result.failure(-1, "浏览资金流水执行出错");
 
     }
 
@@ -45,10 +52,12 @@ public class BrowFundFlowService {
         }
         for (int i = 0; i < num; i++) {
             baseAction.click(fundFlowTab);
+            baseAction.swipeToNum(0.5, 0.1, 5);
             swipFund(recharge);
             swipFund(cash);
             swipFund(lend);
             swipFund(recover);
+
             if (MobileDevice.ANDROID == baseAction.getPlatform().get()) {
                 swipFund(asignment);
                 swipFund(frozen);
@@ -58,7 +67,7 @@ public class BrowFundFlowService {
     }
 
     public void swipFund(String str) {
-        baseAction.swipeToNum(0.5, 0.1, 5);
         baseAction.click(str);
+        baseAction.swipeToNum(0.5, 0.1, 5);
     }
 }

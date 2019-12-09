@@ -7,7 +7,7 @@ import java.util.List;
 public class Mock {
     private static final String LOGIN_PLAIN_SEPARATOR = "sovjnTi";
     private static final String LOGIN_MD5_SEPARATOR = "#";
-    private static final String LOGIN_SIGN = "SDFSDFLASFLlhlKLHO75686tg87HO=--0‘；/。sdfds/.,;']p1mdi2o3@#6";
+    private static final String LOGIN_SIGN = "";
     private static final long START_USERID = 1L;
     private static final long QUANTITY = 100010L;
     private static final String NICK_NAME = "testUserName";
